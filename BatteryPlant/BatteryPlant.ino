@@ -3,20 +3,21 @@
 #include "FastLED.h"
 
 // How many leds in your strip?
-#define NUM_LEDS 60 
+#define NUM_LEDS 15 
 
 // For led chips like Neopixels, which have a data line, ground, and power, you just
 // need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
 // ground, and power), like the LPD8806, define both DATA_PIN and CLOCK_PIN
-#define DATA_PIN 2
-#define CLOCK_PIN 13
+#define DATA_PIN 5
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 
- float intialValue = 0;
+ float touchThreshold = 0;
 
  long total1;
+
+ int sensitivity = 50;
  
  unsigned long millisCount;
  unsigned long lastCount;
@@ -29,9 +30,6 @@ CRGB leds[NUM_LEDS];
 
  static uint8_t hue = 0;
 
-  bool firstIteration = true;
- 
-
 /*
  * CapitiveSense Library Demo Sketch
  * Paul Badger 2008
@@ -41,7 +39,7 @@ CRGB leds[NUM_LEDS];
  */
 
 
-CapacitiveSensor   cs_4_2 = CapacitiveSensor(4,3);        // 10M resistor between pins 4 & 2, pin 2 is sensor pin, add a wire and or foil if desired
+CapacitiveSensor   cs_4_2 = CapacitiveSensor(10,9);        // 10M resistor between pins 4 & 2, pin 2 is sensor pin, add a wire and or foil if desired
 
 void setup()                    
 {
@@ -49,18 +47,15 @@ void setup()
   Serial.begin(57600);
   Serial.println("resetting");
 
-  //Intialize();
+  Intialize();
 
-  
   LEDS.addLeds<WS2812,DATA_PIN,RGB>(leds,NUM_LEDS);
   LEDS.setBrightness(25);
-
-
 }
+
 
 void Intialize()
 {
-
   int tempValue;
   
   for(int i=0; i< 10; i++)
@@ -70,9 +65,8 @@ void Intialize()
     delay(100);
   }
 
-    intialValue = (tempValue/10) - 15;
-    Serial.println(intialValue);
-
+    touchThreshold = (tempValue/10) + sensitivity;
+    Serial.println(touchThreshold);
 }
 
 void fadeall() { for(int i = 0; i < NUM_LEDS; i++) { leds[i].nscale8(254); } }
@@ -86,7 +80,6 @@ void loop() {
 
   ReadSensor();
   
-  
   // First slide the led in one direction
   for(int i = 0; i < NUM_LEDS; i++) {
     // Set the i'th led to red 
@@ -94,51 +87,32 @@ void loop() {
     // Show the leds
     // now that we've shown the leds, reset the i'th led to black
     // leds[i] = CRGB::Black;
-    fadeall();
+    //fadeall();
     // Wait a little bit before we loop around and do it again
 
     FastLED.show(); 
     delay(20);
 
     ReadSensor();
-
   }
-
- if(firstIteration == true)
- {
-    intialValue = (int)((float)intialValue/(float)NUM_LEDS) + 15;
-    Serial.println(intialValue);
-
-    firstIteration = false;
- }
-
+  
 }
 
 void ReadSensor()
 {
   total1 = cs_4_2.capacitiveSensor(10);
 
+ // millisCount = millis();
 
- if(firstIteration == true && total1 > 2)
- {
-  intialValue += total1;
- }else
- {
-   Serial.println(total1);
- }
-
-
-  millisCount = millis();
-
-  if(total1 >= intialValue && millisCount > lastCount)
+  if(total1 >= touchThreshold && total1 > -2)
   {
-    lastCount = millis() + 50;
+  //  lastCount = millis() + 50;
     
     touched = true;
 
     hue += 3;
   }
-  else if(total1 < intialValue)
+  else if(total1 < touchThreshold)
   {
     touched = false;
   }
