@@ -25,6 +25,7 @@ CRGB leds[NUM_LEDS];
  bool touched = false;
   
  int value = 200;
+ int valueDirection = -1;
 
  int touchCount = 0;
 
@@ -94,8 +95,22 @@ void loop() {
     delay(20);
 
     ReadSensor();
+    ValuePulse();
   }
   
+}
+
+//shift the value up and down to give the lamp an ambient pulse
+void ValuePulse()
+{  
+  if(valueDirection == -1 && value < 150)
+  {
+    valueDirection = 1;
+  }else if(valueDirection == 1 && value > 200){
+    valueDirection = -1;
+  }
+
+  value += valueDirection; 
 }
 
 void ReadSensor()
