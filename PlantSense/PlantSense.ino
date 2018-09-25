@@ -102,18 +102,7 @@ void ReadSensor()
 {
   total1 = cs_4_2.capacitiveSensor(10);
 
- // millisCount = millis();
+  //map hue to how much the plant is sensing 
+  hue = map(total1, 0, 1000, 0, 255)
 
-  if(total1 >= touchThreshold && total1 > -2)
-  {
-  //  lastCount = millis() + 50;
-    
-    touched = true;
-
-    hue += 3;
-  }
-  else if(total1 < touchThreshold)
-  {
-    touched = false;
-  }
 }
