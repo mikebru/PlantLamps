@@ -3,7 +3,7 @@
 #include "FastLED.h"
 
 // How many leds in your strip?
-#define NUM_LEDS 15 
+#define NUM_LEDS 20
 
 // For led chips like Neopixels, which have a data line, ground, and power, you just
 // need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
@@ -17,7 +17,7 @@ CRGB leds[NUM_LEDS];
 
  long total1;
 
- int sensitivity = 50;
+ int sensitivity = 15;
  
  unsigned long millisCount;
  unsigned long lastCount;
@@ -93,10 +93,10 @@ void loop() {
 
     FastLED.show(); 
     delay(20);
-
-    ReadSensor();
-    ValuePulse();
+    //ValuePulse();
   }
+
+
   
 }
 
@@ -117,7 +117,9 @@ void ReadSensor()
 {
   total1 = cs_4_2.capacitiveSensor(10);
 
+  Serial.println(total1);
+
   //map hue to how much the plant is sensing 
-  hue = map(total1, 0, 1000, 0, 255)
+  hue = map(total1, 0, 100, 0, 255);
 
 }
