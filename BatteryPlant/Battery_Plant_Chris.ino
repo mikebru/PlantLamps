@@ -8,8 +8,7 @@
 #include <CapacitiveSensor.h>
 #include "FastLED.h"
 
-// How many leds in your strip?
-#define NUM_LEDS 20 
+#define NUM_LEDS 20 // Number of LEDs
 #define DATA_PIN 5
 #define SEND_PIN 10
 #define RECEIVE_PIN 9  // Has sensor on it
