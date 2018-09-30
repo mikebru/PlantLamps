@@ -17,7 +17,7 @@ CRGB leds[NUM_LEDS];
 
  long total1;
 
- int sensitivity = 15;
+ int sensitivity = 200;
  
  unsigned long millisCount;
  unsigned long lastCount;
