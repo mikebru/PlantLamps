@@ -39,7 +39,7 @@ CRGB leds[NUM_LEDS];
  */
 
 
-CapacitiveSensor   cs_4_2 = CapacitiveSensor(10,9);        // 10M resistor between pins 4 & 2, pin 2 is sensor pin, add a wire and or foil if desired
+CapacitiveSensor   cs_4_2 = CapacitiveSensor(9,10);        // 10M resistor between pins 4 & 2, pin 2 is sensor pin, add a wire and or foil if desired
 
 void setup()                    
 {
@@ -103,6 +103,8 @@ void ReadSensor()
   total1 = cs_4_2.capacitiveSensor(10);
 
  // millisCount = millis();
+
+  Serial.println(total1);
 
   if(total1 >= touchThreshold && total1 > -2)
   {

@@ -10,15 +10,15 @@
 
 #define NUM_LEDS 20 // Number of LEDs
 #define DATA_PIN 5
-#define SEND_PIN 10
-#define RECEIVE_PIN 9  // Has sensor on it
+#define SEND_PIN 9
+#define RECEIVE_PIN 10  // Has sensor on it
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 float touch_threshold = 0;
 long total1;
 unsigned long last_count = 0;
-int sensitivity = 15; 
+int sensitivity = 25; 
 int value = 200;
 int touch_count = 0;
 bool touched = false;  
@@ -54,6 +54,8 @@ void Intialize()
 void ReadSensor()
 {
   total1 = cs.capacitiveSensor(10);
+
+  
   if(total1 >= touch_threshold)
   { 
     touched = true;
@@ -68,7 +70,7 @@ void ReadSensor()
 void loop() { 
   // Reinitialize every 5min what to do if person is touching plant during init time?
   if (millis() > last_count+300,000){
-    Initialize();
+    Intialize();
   }
   for(int i = 0; i < NUM_LEDS; i++) {
     ReadSensor();
