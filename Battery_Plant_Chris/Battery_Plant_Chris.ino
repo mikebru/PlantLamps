@@ -18,7 +18,7 @@ CRGB leds[NUM_LEDS];
 float touch_threshold = 0;
 long total1;
 unsigned long last_count = 0;
-int sensitivity = 200; 
+int sensitivity = 100; 
 int value = 200;
 int touch_count = 0;
 bool touched = false;  
