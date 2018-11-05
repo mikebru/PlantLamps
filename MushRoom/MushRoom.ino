@@ -17,19 +17,19 @@ uint16_t currtouched = 0;
 
 
 // How many leds in your strip?
-#define NUM_FLOOR 240
+#define NUM_SIDES 240
 #define NUM_MUSH 20
 
 // For led chips like Neopixels, which have a data line, ground, and power, you just
 // need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
 // ground, and power), like the LPD8806, define both DATA_PIN and CLOCK_PIN
-#define Floor_PIN 3
-#define Ceiling_PIN 4
+#define Left_PIN 3
+#define Right_PIN 4
 #define Mush_PIN 5
 
 // Define the array of leds
-CRGB ledsFloor[NUM_FLOOR];
-CRGB ledsCeiling[NUM_FLOOR];
+CRGB ledsRight[NUM_SIDES];
+CRGB ledsLeft[NUM_SIDES];
 CRGB ledsMush[NUM_MUSH];
 
 void setup() {
@@ -42,9 +42,9 @@ void setup() {
   
   Serial.println("resetting");
   
-  LEDS.addLeds<WS2812,Floor_PIN,RGB>(ledsFloor, NUM_FLOOR);
+  LEDS.addLeds<WS2812,Left_PIN,RGB>(ledsLeft, NUM_SIDES);
   
-  LEDS.addLeds<WS2812,Ceiling_PIN,RGB>(ledsCeiling, NUM_FLOOR);
+  LEDS.addLeds<WS2812,Right_PIN,RGB>(ledsRight, NUM_SIDES);
   
   LEDS.addLeds<WS2812,Mush_PIN,RGB>(ledsMush, NUM_MUSH);
 
@@ -60,9 +60,44 @@ void setup() {
   Serial.println("MPR121 found!");
 }
 
+
+void fadeall() { 
+  for(int i = 0; i < NUM_SIDES; i++) 
+    { 
+    ledsRight[i].nscale8(250); 
+    ledsLeft[i].nscale8(250); 
+    } 
+  }
+
+
 void loop() {
   // put your main code here, to run repeatedly:
 
+    
+  AisleLight(100);
+  
+
+}
+
+void AisleLight(int Hue)
+{
+
+  for(int i=0; i< NUM_SIDES; i++)
+  {
+    ledsRight[i] = CHSV(Hue, 255, 255);
+    ledsLeft[i] = CHSV(Hue, 255, 255);
+
+    FastLED.show(); 
+
+    fadeall();
+    // Wait a little bit before we loop around and do it again
+    delay(10);
+  }
+}
+
+
+void ReadSensor()
+{
   // Get the currently touched pads
   currtouched = cap.touched();
   
@@ -79,6 +114,5 @@ void loop() {
 
   // reset our state
   lasttouched = currtouched;
-  
-
 }
+
